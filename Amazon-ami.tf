@@ -35,17 +35,24 @@ resource "aws_instance" "example-terraform" {
 
   #Execute a command in the Local environment
   provisioner "local-exec" {
-    command = "echo ${aws_instance.example-terraform.public_ip} > ip_address.txt"
+    command = "echo instance public ip: ${aws_instance.example-terraform.public_ip} > instance_settings.txt"
   }
   provisioner "local-exec" {
-    command = "echo ${aws_key_pair.ec2_KeyPair.key_name} > aws_key_pair.txt" 
+    command = "echo instance public dns: ${aws_instance.example-terraform.public_dns} >> instance_settings.txt"
+  }
+  provisioner "local-exec" {
+    command = "echo instance KeyPair: ${aws_key_pair.ec2_KeyPair.key_name} >> instance_settings.txt" 
   }
 
   provisioner "remote-exec" {
     inline = [
       "sudo amazon-linux-extras enable nginx1.12",
       "sudo yum -y install nginx",
-      "sudo systemctl start nginx"
+      "sudo systemctl start nginx",
+      "curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl",
+      "chmod +x ./kubectl",
+      "sudo mv ./kubectl /usr/local/bin/kubectl",
+      "kubectl version --client"
     ]
   }
 }
