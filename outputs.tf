@@ -1,5 +1,5 @@
 output "aws_key_pair"{
-  value = aws_instance.example-terraform.key_name
+  value = aws_instance.terraformInstance.key_name
 }
 
 output "aws_instance" {
@@ -7,7 +7,7 @@ output "aws_instance" {
 }
 
 output "public_dns"{
-  value = aws_instance.example-terraform.public_dns
+  value = aws_instance.terraformInstance.public_dns
 }
 
 output "ip" {
