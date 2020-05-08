@@ -30,3 +30,4 @@ override.tf.json
 aws_key_pair.txt
 instance_settings.txt
 ip_address.txt
+workspace.code-workspace
