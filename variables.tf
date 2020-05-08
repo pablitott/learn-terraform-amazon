@@ -6,10 +6,9 @@ variable "image_id" {
   }
 variable "publicKeyPairFile" {
   #description    = "public ssh key file full path"
-  default        = "~/.ssh/terraform_KeyPair.pub"
+  default        = "~/.ssh/terraform_KeyPair.pem"
 }
- variable "privateKeyPairFile" {
+variable "privateKeyPairFile" {
    #description   = "private ssh key file full path"
    default       = "~/.ssh/terraform_KeyPair"
  }
-
