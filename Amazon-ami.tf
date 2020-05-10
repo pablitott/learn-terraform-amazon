@@ -7,10 +7,26 @@ provider "aws" {
   region     = "us-east-1"
 }
 
+resource "aws_s3_bucket" "terraformlogsbucket2020"{
+  bucket = "terraformlogsbucket2020"
+  acl = "private"
+  
+  tags = {
+    project = "terraformCloudWatch"
+    Name    = "terraformS3Bucket"
+    Owner   = "Pablo Trujillo"
+  }
+}
 resource "aws_key_pair" "ec2_KeyPair" {
   #description    = "KeyPair to be used to connect via SSH to the EC2"
   key_name       = "terraform_KeyPair"
   public_key     = file(var.publicKeyPairFile)
+
+  tags = {
+    project = "terraformCloudWatch"
+    Name    = "terraformKeyPair"
+    Owner   = "Pablo Trujillo"
+  }
 }
 
 # this is the JSON policy to have access to the logs
