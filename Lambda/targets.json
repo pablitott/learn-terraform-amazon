@@ -1,0 +1,7 @@
+[
+    {
+      // value 690049365056 is comming form the output of add-permission
+      "Id": "1", 
+      "Arn": "arn:aws:lambda:us-east-1:690049365056:function:terraformScheduleRule"
+    }
+  ]

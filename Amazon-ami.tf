@@ -4,7 +4,7 @@
 
 provider "aws" {
   profile    = "default"
-  region     = "us-east-1"
+  region     = var.workingRegion
 }
 
 resource "aws_s3_bucket" "terraformlogsbucket2020"{
@@ -84,7 +84,7 @@ EOF
 }
 
 # I think this resource is doing nothing, check before remove it
-resource "aws_iam_role_policy_attachment" "test-attach" {
+resource "aws_iam_role_policy_attachment" "terraformPolicyAttachment" {
   role       = "${aws_iam_role.terraformRole.name}"
   policy_arn = "${aws_iam_policy.terraformPolicy.arn}"
 }

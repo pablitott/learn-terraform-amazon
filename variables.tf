@@ -12,3 +12,6 @@ variable "privateKeyPairFile" {
    #description   = "private ssh key file full path"
    default       = "~/.ssh/terraform_KeyPair"
  }
+variable "workingRegion" {
+  default = "us-east-1"
+}
