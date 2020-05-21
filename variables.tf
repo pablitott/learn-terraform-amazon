@@ -15,3 +15,14 @@ variable "privateKeyPairFile" {
 variable "workingRegion" {
   default = "us-east-1"
 }
+
+variable "terraformSubnet" {
+  # pre-existing resource
+  description = "Specific for terraform use; actually is being used by MailServer in us-east-1b"
+  default = "subnet-0a7fc996e151873a0"
+}
+
+variable "terraformSecurityGroup"{
+  description = "Security group used for NextCloud ECs"
+  default     = "sg-0d182a036ffe6b214"
+}

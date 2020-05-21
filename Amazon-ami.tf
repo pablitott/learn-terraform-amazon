@@ -59,7 +59,7 @@ EOF
 
 #define the main aws_iam_role and named as terraformRole
 resource "aws_iam_role" "terraformRole" {
-  name = "terraformRole"
+  name      = "terraformRole"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -97,10 +97,13 @@ resource "aws_iam_instance_profile" "terraformProfile" {
 
 # Define aws EC2 instance
 resource "aws_instance" "terraformInstance" {
-  ami        = var.image_id
-  key_name   = aws_key_pair.ec2_KeyPair.key_name
+  ami           = var.image_id
+  key_name      = aws_key_pair.ec2_KeyPair.key_name
   instance_type = "t2.micro"
+  subnet_id     = "${var.terraformSubnet}"
   iam_instance_profile = "${aws_iam_instance_profile.terraformProfile.name}"
+
+  vpc_security_group_ids = ["${var.terraformSecurityGroup}"]
 
   # define tags for the resource
   tags = {
@@ -152,14 +155,37 @@ resource "aws_instance" "terraformInstance" {
       "sudo cp ~/awslogs.conf /etc/awslogs/awslogs.conf",
       "sudo systemctl start awslogsd",
       "sudo chkconfig awslogsd on",
-      "sudo systemctl enable awslogsd.service"
+      "sudo systemctl enable awslogsd.service",
+      "sudo yum update -y",
+      "sudo amazon-linux-extras install docker -y"
     ]
   }
 }
 
 #define an eip resource and assign to EC2 above
-resource "aws_eip" "ip" {
+#it prevents to be destroyed when the instance is destroyed
+resource "aws_eip" "terraformElasticIp" {
   vpc      = true
-  instance = aws_instance.terraformInstance.id
-}
+  lifecycle {
+    prevent_destroy = true
+  }  
+  # define tags for the resource
+  tags = {
+    Name    = "terraformElasticIp"
+    Owner   = "Pablo Trujillo"
+    distro  = "Amazon"
+    project = "terraformCloudWatch"
+    }
+  }
+  #======================================================================
+  #            aws_eip_association
+  # Associate existing elastic ip the aws_instance created
+  # Provides an AWS EIP Association as a top level resource, 
+  # to associate and disassociate Elastic IPs from AWS Instances and Network Interfaces
+  #======================================================================
+  resource "aws_eip_association" "eip-to-instance" {
+    allocation_id  = aws_eip.terraformElasticIp.id
+    instance_id    = aws_instance.terraformInstance.id
+    allow_reassociation = true 
+  }
 
